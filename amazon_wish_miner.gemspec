@@ -8,4 +8,7 @@ Gem::Specification.new do |s|
   s.files       = ['lib/amazon_wish_miner.rb']
   s.homepage    = 'https://github.com/avtrujillo/amazon_wish_miner'
   s.license     = 'MIT'
+
+  s.add_runtime_dependency 'HTTParty',  '~> 2'
+  s.add_runtime_dependency 'nokogiri',  '~> 2'
 end
