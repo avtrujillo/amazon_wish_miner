@@ -1,0 +1,2 @@
+class AmazonWish
+end
