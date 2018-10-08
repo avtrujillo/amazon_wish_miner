@@ -5,7 +5,10 @@ Gem::Specification.new do |s|
   s.summary     = 'Scrapes one or more Amazon wish lists'
   s.description = 'Modeled after Amazon Wish Lister http://doitlikejustin.github.io/amazon-wish-lister/'
   s.author      = 'Alexander V. Trujillo'
-  s.files       = ['lib/amazon_wish_miner.rb']
+  s.files       = [
+    'lib/amazon_wish_miner.rb', 'lib/amazon_wish_miner/amazon_wish_list.rb',
+    'lib/amazon_wish_miner/amazon_wish.rb'
+  ]
   s.homepage    = 'https://github.com/avtrujillo/amazon_wish_miner'
   s.license     = 'MIT'
 
