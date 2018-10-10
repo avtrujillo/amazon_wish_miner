@@ -14,7 +14,7 @@ class AmazonWishList
     raise "invalid sort" unless sort_string
     url = "http://www.amazon.#{tld}/registry/wishlist/#{amazon_user_id}"
     query_string = "?reveal=#{reveal.to_s}&sort=#{sort_string}&layout=standard"
-    first_page = HTTParty.get(url + query_string)
+    first_page = RestClient.get(url + query_string)
   end
 
 end
