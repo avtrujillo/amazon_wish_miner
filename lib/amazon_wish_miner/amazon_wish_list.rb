@@ -8,6 +8,11 @@ class AmazonWishList
   def initialize
   end
 
+  # TODO: https://www.amazon.com/hz/wishlist/ls/2WHUDN1UIDVUT/ref=cm_sw_r_cp_ep_ws_8xNVBb731TTMS
+  #=> and https://www.amazon.com/registry/wishlist/2WHUDN1UIDVUT/ref=cm_sw_r_cp_ep_ws_8xNVBb731TTMS
+  #=> appear to be functionally the same. Code should reflect this when it is
+  #=> given links as arguments.
+
   def self.get_wishlist(amazon_list_id, reveal = :all, sort = :date_added, tld = 'com')
     raise "invalid reveal" unless REVEAL_OPTIONS.include?(reveal)
     sort_string = SORT_OPTIONS[sort]
