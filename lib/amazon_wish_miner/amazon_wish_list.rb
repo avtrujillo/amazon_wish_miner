@@ -18,11 +18,11 @@ class AmazonWishList
     raise "invalid reveal" unless REVEAL_OPTIONS.include?(reveal)
     raise "invalid sort" unless SORT_OPTIONS[sort]
 
-    query_params = reveal: reveal.to_s, sort_string: SORT_OPTIONS[sort]
+    query_params = {reveal: reveal.to_s, sort_string: SORT_OPTIONS[sort]}
     # lek is nil for the first page
     url_without_qstring = "http://www.amazon.#{tld}/hz/wishlist/ls/#{amazon_list_id}"
 
-    self.get_all_wishlist_pages(url_without_qstring, query_params)
+    pages = self.get_all_wishlist_pages(url_without_qstring, query_params)
   end
 
   def self.get_all_wishlist_pages(url_without_qstring, query_params)
@@ -42,9 +42,9 @@ class AmazonWishList
     RestClient.get(url_without_qstring + query_string)
   end
 
-  def self.page_query_string(lek = :nil, reveal = :all, sort = :date_added)
+  def self.page_query_string(query_params)
     "?reveal=#{query_params[:reveal]}&layout=standard&sort=#{query_params[:sort_string]})" +
-    ("&lek=#{query_params[:lek]}&type=wishlist&ajax=true" if query_params[:lek])
+    (query_params[:lek] ? "&lek=#{query_params[:lek]}&type=wishlist&ajax=true" : '')
   end
 
   def self.find_lek_from_response(response)
