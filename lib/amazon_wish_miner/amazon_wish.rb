@@ -1,22 +1,17 @@
 class AmazonWish
 
   def self.parse_wishes_from_pages(page_responses)
-    wish_ids = []
-    page_responses.each do |response|
-      page = Nokogiri::HTML(response)
-      lis = page.css('ul#g-items li')
-      lis.each do |li|
-        drap = li['data-reposition-action-params']
-        wish_ids << external_id_from_drap(drap)
-      end
-    end
-    wishes_from_ids(wish_ids)
+    list_items = self.list_items_from_response(page_responses)
+    wish_ids = self.draps_from_list_items(list_items)
+    # wishes_from_ids(wish_ids)
   end
 
   def self.list_items_from_response(page_responses)
     page_responses.each_with_object(Array.new) do |response, list_items|
       page = Nokogiri::HTML(response)
-      list_items += page.css('ul#g-items li')
+      page.css('ul#g-items li').each do |li|
+        list_items << li
+      end
     end
   end
 
@@ -30,11 +25,16 @@ class AmazonWish
   def self.external_id_from_drap(drap)
     attrs = drap.split(',')
     attr_substrings = attrs.map { |elem| elem.split(':') }
-    ied_attr = attr_substrings.find { |ss| ss.include?("itemExternalId")}
-    asin_string = ied_attr.find {|elem| elem.include?("ASIN")}
-    id_numbers_string = asin.split(':')[1]
-    id_numbers_arr = id_numbers_string.split('|')
-    id_numbers_arr.first
+    ied_attr = attr_substrings.find { |ss| ss.include?("{\"itemExternalId\"")}
+    id_string = ied_attr.last
+    ids_arr = id_string.split('|')
+    ids_arr.first
+  end
+
+  # parsing item info from the item's own url rather than from the wishlist
+  #=> means that we can reuse the method below to scrape item info
+
+  def self.wishes_from_ids
   end
 
 end
