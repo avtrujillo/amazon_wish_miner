@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'amazon_wish_miner'
-  s.version     = '0.0.1'
+  s.version     = '0.1.0'
   s.date        = '2018-10-03'
   s.summary     = 'Scrapes one or more Amazon wish lists'
   s.description = 'Modeled after Amazon Wish Lister http://doitlikejustin.github.io/amazon-wish-lister/'
@@ -13,5 +13,5 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
 
   s.add_runtime_dependency 'rest-client',  '~> 2'
-  s.add_runtime_dependency 'nokogiri',  '~> 2'
+  s.add_runtime_dependency 'nokogiri',  '~> 1.8'
 end
