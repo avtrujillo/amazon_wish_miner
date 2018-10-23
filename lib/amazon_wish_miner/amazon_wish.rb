@@ -1,6 +1,6 @@
 class AmazonWish
 
-  attr_reader: :title, :id
+  attr_reader :title, :id
 
   def initialize(id, title)
     @title = title
