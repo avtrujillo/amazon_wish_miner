@@ -55,6 +55,27 @@ class AmazonWishList
     start_of_lek.split('" class="lastEvaluatedKey"')[0]
   end
 
+  def self.wishlist_from_url(url)
+    url = check_for_redirect(url)
+    id_start = url.split('/wishlist/')[1]
+    id = id_start.split('/').find { |str| str != 'ls' }
+    get_wishlist(id)
+  end
+
+  def self.check_for_redirect(url)
+    begin
+      response = RestClient::Request.execute(method: :get, url: url, max_redirects: 0)
+    rescue RestClient::ExceptionWithResponse => err
+      if response.code / 100 == 3
+        url = err.http_headers[:location]
+        retry
+      else
+        raise err
+      end
+    end
+    url
+  end
+
 
 
 end
