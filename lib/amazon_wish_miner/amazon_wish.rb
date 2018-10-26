@@ -7,6 +7,10 @@ class AmazonWish
     @id = id
   end
 
+  def url
+    "https://www.amazon.com/dp/#{@id}"
+  end
+
   def self.parse_wishes_from_pages(page_responses)
     list_items = self.list_items_from_response(page_responses)
     wish_ids = self.draps_from_list_items(list_items)
