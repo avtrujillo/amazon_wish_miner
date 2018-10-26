@@ -1,11 +1,15 @@
 class AmazonWishList
 
+  attr_accessor :id, :wishes
+
   REVEAL_OPTIONS = [:all, :purchased, :unpurchased].freeze
   SORT_OPTIONS = {date_added: "date-added", title: 'universal-title',
     price_high: 'universal-price-desc', price_low: 'universal-price',
     date_updated: 'last-updated', priority: 'priority'}.freeze
 
-  def initialize
+  def initialize(id, wishes)
+    @id = id
+    @wishes = wishes
   end
 
   # TODO: https://www.amazon.com/hz/wishlist/ls/2WHUDN1UIDVUT/ref=cm_sw_r_cp_ep_ws_8xNVBb731TTMS,
@@ -23,6 +27,8 @@ class AmazonWishList
     url_without_qstring = "http://www.amazon.#{tld}/hz/wishlist/ls/#{amazon_list_id}"
 
     pages = self.get_all_wishlist_pages(url_without_qstring, query_params)
+    wishes = AmazonWish.parse_wishes_from_pages(pages)
+    AmazonWishList.new(amazon_list_id, wishes)
   end
 
   def self.get_all_wishlist_pages(url_without_qstring, query_params)
@@ -66,8 +72,8 @@ class AmazonWishList
     begin
       response = RestClient::Request.execute(method: :get, url: url, max_redirects: 0)
     rescue RestClient::ExceptionWithResponse => err
-      if response.code / 100 == 3
-        url = err.http_headers[:location]
+      if err.response.code / 100 == 3
+        url = err.response.headers[:location]
         retry
       else
         raise err

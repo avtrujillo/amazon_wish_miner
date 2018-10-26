@@ -2,6 +2,10 @@ class AmazonWish
 
   attr_reader :title, :id
 
+  TITLE_TRIMMER = Proc.new do |char|
+    char == "\n" || char == ' '
+  end
+
   def initialize(id, title)
     @title = title
     @id = id
@@ -10,7 +14,7 @@ class AmazonWish
   def self.parse_wishes_from_pages(page_responses)
     list_items = self.list_items_from_response(page_responses)
     wish_ids = self.draps_from_list_items(list_items)
-    # wishes_from_ids(wish_ids)
+    wishes_from_ids(wish_ids)
   end
 
   def self.list_items_from_response(page_responses)
@@ -51,7 +55,9 @@ class AmazonWish
     item_url = 'https://www.amazon.com/dp/' + id
     response = RestClient.get(item_url)
     page = Nokogiri::HTML(response)
-    title = page.css('span[id$="roductTitle"]') # not a typo, css selectors are
+    title_text = page.css('span[id$="roductTitle"]').children.text
+    title = trim_title(title_text)
+    # not a typo, css selectors are
     #=> case sensetive, and we need to capture e.g. both "productTitle" and "ebookProductTitle"
     # price = page.css('priceblock_ourprice')
     # TODO: parse prices
@@ -62,6 +68,11 @@ class AmazonWish
 
   def self.parse_feature_bullets(feature_bullets_div)
     bullets = feature_bullets_div.css('ul li')
+  end
+
+  def self.trim_title(untrimmed_title)
+    chars = untrimmed_title.chars
+    chars.drop_while(&TITLE_TRIMMER).reverse.drop_while(&TITLE_TRIMMER).reverse.join
   end
 
 end
