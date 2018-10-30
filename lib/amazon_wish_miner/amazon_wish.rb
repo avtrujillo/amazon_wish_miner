@@ -55,7 +55,7 @@ class AmazonWish
     item_url = 'https://www.amazon.com/dp/' + id
     response = RestClient.get(item_url)
     page = Nokogiri::HTML(response)
-    title = page.css('span[id$="roductTitle"]').children.text.strip
+    title = get_title_from_page(page)
     # not a typo, css selectors are
     #=> case sensetive, and we need to capture e.g. both "productTitle" and "ebookProductTitle"
     # price = page.css('priceblock_ourprice')
@@ -67,6 +67,12 @@ class AmazonWish
 
   def self.parse_feature_bullets(feature_bullets_div)
     bullets = feature_bullets_div.css('ul li')
+  end
+
+  def self.get_title_from_page(page)
+    span_title = page.css('span[id$="roductTitle"]').children.text.strip
+    return span_title unless span_title == ""
+    meta_title = page.css('meta[name="title"]')[0].attribute('content').value
   end
 
   def self.trim_title(untrimmed_title)
